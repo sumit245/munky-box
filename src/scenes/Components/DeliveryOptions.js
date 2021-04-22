@@ -1,0 +1,125 @@
+import React, { Component } from 'react'
+import { View, TouchableOpacity, Modal, StyleSheet, Text, Pressable } from 'react-native'
+import Icon from 'react-native-vector-icons/Ionicons';
+import { getAddress } from '../../services/addressHandler'
+import { getUser } from '../../services/getuser';
+
+export default class DeliveryOptions extends Component {
+    state = {
+        modalVisible: false,
+        address: "Choose Delivery Address",
+    };
+
+    setModalVisible = (visible) => {
+        this.setState({ modalVisible: visible });
+    }
+    setAddress = (address) => {
+        this.setState({ address: address, modalVisible: false })
+    }
+    componentDidMount() {
+        getAddress('@address').then(res => {
+            this.setState({ addresses: res })
+        })
+    }
+
+    render() {
+        const { modalVisible, addresses } = this.state;
+        return (
+            <>
+                <View style={styles.sortView}>
+                    <Modal
+                        animationType="slide"
+                        transparent={true}
+                        visible={modalVisible}
+                        onRequestClose={() => {
+                            this.setModalVisible(!modalVisible);
+                        }}
+                    >
+                        <View style={styles.sortView}>
+                            <View style={styles.modalView}>
+                                <Pressable
+                                    style={styles.buttonClose}
+                                    onPress={() => this.setModalVisible(!modalVisible)}
+                                >
+                                    <Icon name="close-outline" size={20} />
+                                </Pressable>
+                                <View>
+                                    <TouchableOpacity style={{ flexDirection: 'row', borderBottomColor: '#979797', borderBottomWidth: 1 }} onPress={() => { this.setAddress('Home') }} >
+                                        <Icon name="ios-home-outline" size={16} style={styles.modalText} />
+                                        <Text style={styles.modalText}>Home</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity style={{ flexDirection: 'row', borderBottomColor: '#979797', borderBottomWidth: 1 }} onPress={() => { this.setAddress('Office') }} >
+                                        <Icon name="ios-business-outline" size={16} style={styles.modalText} />
+                                        <Text style={styles.modalText}>Office</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity style={{ flexDirection: 'row', borderBottomColor: '#979797', borderBottomWidth: 1 }} onPress={() => { this.setAddress('Others') }} >
+                                        <Icon name="ios-globe-outline" size={16} style={styles.modalText} />
+                                        <Text style={styles.modalText}>Others</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity style={{ flexDirection: 'row', borderBottomColor: '#979797', borderBottomWidth: 1 }}>
+                                        <Icon name="ios-location-outline" size={16} style={styles.modalText} />
+                                        <Text style={styles.modalText}>Choose Current Location</Text>
+                                    </TouchableOpacity>
+                                </View>
+                            </View>
+                        </View>
+                    </Modal>
+                </View>
+
+                <View>
+                    <View style={{ flexDirection: 'row' }}>
+                        <TouchableOpacity style={{ flexDirection: "row" }} onPress={() => this.setModalVisible(true)} >
+                            <Text style={{ fontSize: 16 }}>DELIVER TO</Text>
+                            <Icon name="chevron-down-outline" size={20} />
+                        </TouchableOpacity>
+                    </View>
+                    <Text style={{
+                        fontWeight: 'bold',
+                        fontSize: 14,
+                        color: '#979797',
+                        top: -8
+                    }}>
+                        {this.state.address}
+                    </Text>
+                </View>
+            </>
+        )
+    }
+}
+const styles = StyleSheet.create({
+    sortView: {
+        flex: 1,
+        position: 'absolute',
+        top: 20,
+        width: 220,
+        left: 2,
+        backgroundColor: "white",
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5
+    },
+    buttonClose: {
+        elevation: 10,
+        height: 20,
+        width: 20,
+        backgroundColor: '#fff',
+        borderRadius: 10,
+        position: 'absolute',
+        right: 0,
+        top: -10,
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    modalText: {
+        paddingHorizontal: 10,
+        fontWeight: 'bold',
+        color: '#979797',
+        paddingVertical: 10,
+        textAlign: "justify",
+    }
+});

@@ -2,12 +2,12 @@ import React, { Component } from 'react'
 import { View, TouchableOpacity, Modal, StyleSheet, Text, Pressable } from 'react-native'
 import Icon from 'react-native-vector-icons/Ionicons';
 import { getAddress } from '../../services/addressHandler'
-import { getUser } from '../../services/getuser';
 
 export default class DeliveryOptions extends Component {
     state = {
         modalVisible: false,
         address: "Choose Delivery Address",
+        addresses: {}
     };
 
     setModalVisible = (visible) => {
@@ -19,7 +19,9 @@ export default class DeliveryOptions extends Component {
     componentDidMount() {
         getAddress('@address').then(res => {
             this.setState({ addresses: res })
-        })
+        }).catch(err =>
+            console.error(err)
+        )
     }
 
     render() {
@@ -44,22 +46,18 @@ export default class DeliveryOptions extends Component {
                                     <Icon name="close-outline" size={20} />
                                 </Pressable>
                                 <View>
-                                    <TouchableOpacity style={{ flexDirection: 'row', borderBottomColor: '#979797', borderBottomWidth: 1 }} onPress={() => { this.setAddress('Home') }} >
-                                        <Icon name="ios-home-outline" size={16} style={styles.modalText} />
-                                        <Text style={styles.modalText}>Home</Text>
-                                    </TouchableOpacity>
-                                    <TouchableOpacity style={{ flexDirection: 'row', borderBottomColor: '#979797', borderBottomWidth: 1 }} onPress={() => { this.setAddress('Office') }} >
-                                        <Icon name="ios-business-outline" size={16} style={styles.modalText} />
-                                        <Text style={styles.modalText}>Office</Text>
-                                    </TouchableOpacity>
-                                    <TouchableOpacity style={{ flexDirection: 'row', borderBottomColor: '#979797', borderBottomWidth: 1 }} onPress={() => { this.setAddress('Others') }} >
-                                        <Icon name="ios-globe-outline" size={16} style={styles.modalText} />
-                                        <Text style={styles.modalText}>Others</Text>
-                                    </TouchableOpacity>
-                                    <TouchableOpacity style={{ flexDirection: 'row', borderBottomColor: '#979797', borderBottomWidth: 1 }}>
-                                        <Icon name="ios-location-outline" size={16} style={styles.modalText} />
-                                        <Text style={styles.modalText}>Choose Current Location</Text>
-                                    </TouchableOpacity>
+                                    {
+                                        Object.keys(addresses).length !== 0 ? (<TouchableOpacity style={{ flexDirection: 'row', borderBottomColor: '#979797', borderBottomWidth: 1 }} onPress={() => { this.setAddress('Home') }} >
+                                            <Icon name="ios-home-outline" size={16} style={styles.modalText} />
+                                            <Text style={styles.modalText}>{addresses.address_type}</Text>
+                                        </TouchableOpacity>
+                                        ) : (
+                                            <TouchableOpacity style={{ flexDirection: 'row', borderBottomColor: '#979797', borderBottomWidth: 1 }}>
+                                                <Icon name="ios-location-outline" size={16} style={styles.modalText} />
+                                                <Text style={styles.modalText}>Choose Current Location</Text>
+                                            </TouchableOpacity>
+                                        )
+                                    }
                                 </View>
                             </View>
                         </View>

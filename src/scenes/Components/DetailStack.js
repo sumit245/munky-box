@@ -99,8 +99,6 @@ export default class DetailStack extends Component {
     }).catch((err) => {
       console.error(err);
     })
-    console.error(this.props);
-
   }
 
   renderCuisine = ({ item }) => (

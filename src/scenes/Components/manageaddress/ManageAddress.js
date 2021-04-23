@@ -44,6 +44,7 @@ export default class ManageAddress extends Component {
             address: address,
             status: "active"
         }
+        console.log(user);
         axios.post(USER_URL, user).then(res => {
             console.log(res.data)
         }).catch(err => {

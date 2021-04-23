@@ -5,17 +5,14 @@ import {
     StyleSheet,
     Dimensions,
     Animated,
+    TouchableOpacity
 } from 'react-native';
-import {
-    TouchableOpacity,
-} from 'react-native-gesture-handler';
 import PhoneInput from 'react-native-phone-number-input';
 import firebase from '../../../firebase'
 import { FirebaseRecaptchaVerifierModal, FirebaseRecaptchaBanner } from 'expo-firebase-recaptcha';
 import OTPTextView from 'react-native-otp-textinput'
 import { Actions } from 'react-native-router-flux';
 import CountDown from 'react-native-countdown-component';
-import axios from 'axios';
 
 const { width } = Dimensions.get('window');
 const recaptchaVerifier = React.createRef();
@@ -41,19 +38,13 @@ class OTPLogin extends React.PureComponent {
                 verificationCode
             );
             await firebase.auth().signInWithCredential(credential);
-            let newUser = {
-                phone: phoneNumber
-            }
-            // axios.post('http://192.168.1.4/api/users', newUser).then((res) => res.status(200, 'Added')).catch((err) => {
-            //     console.log(err)
-            // }) ******Write code to put in database and login persistency
-            Actions.replace('userdetails', { logintype: 'mobile' })
+            Actions.replace('userdetails', { logintype: 'mobile', phone: phoneNumber })
         } catch (err) {
             alert(`Error: ${err.message}`);
         }
     }
     render() {
-        const { message, phoneNumber, verificationCode, verificationId } = this.state
+        const { message, phoneNumber } = this.state
         return (
             <View style={styles.mobin}>
                 <Text style={styles.instructions}>{message || ""} {phoneNumber || ""}</Text>

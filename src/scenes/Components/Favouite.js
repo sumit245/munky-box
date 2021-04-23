@@ -23,7 +23,6 @@ export default class Favouite extends Component {
 
     render() {
         const { restaurant } = this.state
-        console.info(restaurant.length)
         if (!restaurant) {
             return (
                 <View style={styles.container} >

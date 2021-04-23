@@ -136,8 +136,6 @@ export default class RegistrationForm extends Component {
             let data = this.state
         }
     }
-
-
     render() {
         const { uri, result } = this.state
         return (

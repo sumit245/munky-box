@@ -1,13 +1,18 @@
-import React, { useState, useContext } from 'react'
+import React, { useState } from 'react'
 import { TouchableOpacity, StyleSheet } from 'react-native'
 import Icon from 'react-native-vector-icons/Ionicons'
-import { FavouriteContext } from '../../../services/favourites/favourites.context'
+import { setFavourite, updateFavourite, removeFavourite } from '../../../services/favourites/favouriteHandler'
 
-export const Favourite = ({ restaurant, style, isHome }) => {
-    const favourites = useContext(FavouriteContext)
+export const Favourite = ({ isHome, restaurant }) => {
     const [favourite, setfavourite] = useState(false)
+    const setfavretes = () => {
+        // setFavourite('@favourite', restaurant)
+        updateFavourite('@favourite', restaurant)
+        // removeFavourite('@favourite')
+        setfavourite(!favourite)
+    }
     return (
-        <TouchableOpacity style={styles.bookmark} onPress={() => setfavourite(!favourite)}>
+        <TouchableOpacity style={styles.bookmark} onPress={setfavretes}>
             <Icon
                 name={favourite && isHome ? "heart" : "heart-outline"}
                 color={favourite && isHome ? "#f00" : "#ff7777"}

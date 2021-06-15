@@ -1,4 +1,4 @@
-import React, {Component, useEffect, useState} from 'react';
+import React, { Component } from 'react';
 import {
   View,
   Text,
@@ -9,9 +9,9 @@ import {
   TouchableOpacity,
   FlatList,
 } from 'react-native';
-import {Card, Divider, IconButton} from 'react-native-paper';
+import { Card, Divider, IconButton } from 'react-native-paper';
 import CalendarPicker from 'react-native-calendar-picker';
-import {Actions} from 'react-native-router-flux';
+import { Actions } from 'react-native-router-flux';
 import Icon from 'react-native-vector-icons/Ionicons'
 
 const SLOTLUNCH = [
@@ -43,7 +43,7 @@ const SLOTDINNER = [
   },
 ];
 
-const Slot = ({timing}) => {
+const Slot = ({ timing }) => {
   const [value, setValue] = useState(false);
   const slotClicked = () => {
     setValue(!value);
@@ -52,7 +52,7 @@ const Slot = ({timing}) => {
   return (
     <View
       style={[
-        value ? {backgroundColor: 'red'} : {backgroundColor: 'gray'},
+        value ? { backgroundColor: 'red' } : { backgroundColor: 'gray' },
         {
           marginHorizontal: 5,
           width: 150,
@@ -64,12 +64,12 @@ const Slot = ({timing}) => {
         },
       ]}>
       <TouchableOpacity onPress={slotClicked}>
-        <Text style={{fontSize: 16, color: '#ffffff'}}>{timing}</Text>
+        <Text style={{ fontSize: 16, color: '#ffffff' }}>{timing}</Text>
       </TouchableOpacity>
     </View>
   );
 };
-const renderSlot = ({item}) => <Slot timing={item.timing} />;
+const renderSlot = ({ item }) => <Slot timing={item.timing} />;
 
 export default class AddressPay extends Component {
   constructor(props) {
@@ -81,13 +81,13 @@ export default class AddressPay extends Component {
     };
   }
   setModalVisible = (visible) => {
-    this.setState({modalVisible: visible});
+    this.setState({ modalVisible: visible });
   };
   componentDidMount() {
-    const {selectedStartDate} = this.state;
+    const { selectedStartDate } = this.state;
     const startDate = selectedStartDate ? selectedStartDate.toString() : '';
   }
-  onDateChange=(date)=> {
+  onDateChange = (date) => {
     this.setState({
       selectedStartDate: date,
     });
@@ -140,8 +140,8 @@ export default class AddressPay extends Component {
   };
 
   render() {
-    const {modalVisible} = this.state;
-    const {meal} = this.state;
+    const { modalVisible } = this.state;
+    const { meal } = this.state;
     return (
       <View>
         <Modal
@@ -157,10 +157,10 @@ export default class AddressPay extends Component {
                 allowBackwardRangeSelect={false}
                 selectedDayColor="green"
                 width={340}
-                selectedRangeStyle={{backgroundColor: 'green'}}
+                selectedRangeStyle={{ backgroundColor: 'green' }}
               />
               <TouchableHighlight
-                style={{...styles.openButton, backgroundColor: '#2196F3'}}
+                style={{ ...styles.openButton, backgroundColor: '#2196F3' }}
                 onPress={() => {
                   this.setModalVisible(!modalVisible);
                 }}>
@@ -192,43 +192,43 @@ export default class AddressPay extends Component {
           </Text>
           <Text style={styles.subtitle}>by {this.props.resname}</Text>
           <Text style={styles.plan}>{this.props.plan}</Text>
-          <Divider style={{marginHorizontal: 5, marginVertical: 10}} />
-          <View style={{flexDirection: 'row'}}>
-            <Text style={[{left: 10, position: 'absolute'}, styles.subheading]}>
+          <Divider style={{ marginHorizontal: 5, marginVertical: 10 }} />
+          <View style={{ flexDirection: 'row' }}>
+            <Text style={[{ left: 10, position: 'absolute' }, styles.subheading]}>
               {this.props.duration} DAYS
             </Text>
             <Text
-              style={[{right: 50, position: 'absolute'}, styles.subheading]}>
+              style={[{ right: 50, position: 'absolute' }, styles.subheading]}>
               TOTAL
             </Text>
           </View>
-          <View style={{flexDirection: 'row', top: 20}}>
+          <View style={{ flexDirection: 'row', top: 20 }}>
             <Text
               style={[
                 styles.subheading,
-                {left: 10, position: 'absolute', color: '#606080'},
+                { left: 10, position: 'absolute', color: '#606080' },
               ]}>
               $ {this.props.price} / meal
             </Text>
             <Text
               style={[
                 styles.subheading,
-                {right: 60, position: 'absolute', color: '#606080'},
+                { right: 60, position: 'absolute', color: '#606080' },
               ]}>
               $ {this.props.duration * this.props.price}
             </Text>
           </View>
         </Card>
-        <Text style={{...styles.header, top: -80, fontSize: 18}}>
+        <Text style={{ ...styles.header, top: -80, fontSize: 18 }}>
           Select Plan Duration
         </Text>
-        <Card style={{...styles.desccard, top: -80, height: 80}}>
-          <View style={{flexDirection: 'row', paddingHorizontal: '2%'}}>
-            <Text style={{fontSize: 18, padding: 5}}>
+        <Card style={{ ...styles.desccard, top: -80, height: 80 }}>
+          <View style={{ flexDirection: 'row', paddingHorizontal: '2%' }}>
+            <Text style={{ fontSize: 18, padding: 5 }}>
               {this.ShowCurrentDate()}
             </Text>
-            <Text style={{fontSize: 18, padding: 5}}> - </Text>
-            <Text style={{fontSize: 18, padding: 5}}>
+            <Text style={{ fontSize: 18, padding: 5 }}> - </Text>
+            <Text style={{ fontSize: 18, padding: 5 }}>
               {this.ShowSubscriptionDate()}
             </Text>
           </View>
@@ -240,13 +240,13 @@ export default class AddressPay extends Component {
               justifyContent: 'flex-end',
               position: 'absolute',
               right: 10,
-              top:-10
+              top: -10
             }}
             onPress={() => {
               this.setModalVisible(true);
             }}
           />
-          <Divider style={{marginHorizontal: 10, margin: '2%'}} />
+          <Divider style={{ marginHorizontal: 10, margin: '2%' }} />
           <Text
             style={{
               fontSize: 18,
@@ -260,7 +260,7 @@ export default class AddressPay extends Component {
             The Kitchen Delivers on Sat & Sun
           </Text>
         </Card>
-        <View style={{top: -80, flexDirection: 'row'}}>
+        <View style={{ top: -80, flexDirection: 'row' }}>
           <Text style={styles.header}>Select a Delivery Slot</Text>
           <TouchableOpacity
             onPress={() => {
@@ -268,8 +268,8 @@ export default class AddressPay extends Component {
             }}
             style={[
               this.state.meal
-                ? {backgroundColor: 'tomato'}
-                : {backgroundColor: 'teal'},
+                ? { backgroundColor: 'tomato' }
+                : { backgroundColor: 'teal' },
               {
                 height: 24,
                 marginTop: 10,
@@ -277,12 +277,12 @@ export default class AddressPay extends Component {
                 paddingHorizontal: 3,
               },
             ]}>
-            <Text style={{color: 'white', fontSize: 18, fontWeight: 'bold'}}>
+            <Text style={{ color: 'white', fontSize: 18, fontWeight: 'bold' }}>
               {this.state.meal ? 'LUNCH' : 'DINNER'}
             </Text>
           </TouchableOpacity>
         </View>
-        <View style={{top: -80}}>
+        <View style={{ top: -80 }}>
           <FlatList
             horizontal
             data={this.state.meal ? SLOTLUNCH : SLOTDINNER}
@@ -292,7 +292,7 @@ export default class AddressPay extends Component {
           />
         </View>
         <View
-          style={{top: -60, justifyContent: 'center', alignItems: 'center', flexDirection:'row'}}>
+          style={{ top: -60, justifyContent: 'center', alignItems: 'center', flexDirection: 'row' }}>
           <Text
             style={{
               alignSelf: 'flex-start',
@@ -301,11 +301,11 @@ export default class AddressPay extends Component {
             }}>
             Notes for Delivery
           </Text>
-          <TouchableOpacity onPress={()=>Actions.coupons()}>
-          <Icon name='pencil-sharp' size={24} color='blue' />
-            </TouchableOpacity>
+          <TouchableOpacity onPress={() => Actions.coupons()}>
+            <Icon name='pencil-sharp' size={24} color='blue' />
+          </TouchableOpacity>
         </View>
-        <View style={{top: -5}}>
+        <View style={{ top: -5 }}>
           <TouchableOpacity
             style={{
               width: '98%',
@@ -321,7 +321,7 @@ export default class AddressPay extends Component {
             onPress={() => {
               Actions.manageaddress();
             }}>
-            <Text style={{fontSize: 24, fontWeight: 'bold', color: '#058F05'}}>
+            <Text style={{ fontSize: 24, fontWeight: 'bold', color: '#058F05' }}>
               {' '}
               ADD ADDRESS TO PROCEED
             </Text>

@@ -5,29 +5,37 @@ import Icon from 'react-native-vector-icons/Ionicons'
 export default class MenuItem extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      ...this.props
+    }
+  }
+  componentDidMount() {
+    console.log(this.state.meals.type);
   }
   render() {
+    const { meals } = this.state
     return (
       <Card containerStyle={styles.item} key={this.props.index}>
         <View>
           <Image
-            source={{ uri: this.props.item.image }}
+            source={{ uri: meals.image }}
             style={styles.image}
             resizeMode="cover"
           />
         </View>
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 150 }}>
           <View style={{ flexDirection: 'row' }} >
-            <Icon style={{ marginTop: 5 }} name="stop-circle" color={this.props.item.cuisine_type === 'veg' ? '#2aaf21' : '#cc2224'} size={16} />
+            <Icon style={{ marginTop: 5 }} name="stop-circle" color={meals.type === 'Veg' ? '#2aaf21' : '#cc2224'} size={16} />
             <Text style={styles.title}>
-              {this.props.item.meal_name}
+              {meals.meal_name}
             </Text>
           </View>
           <Text style={styles.title}>
-            {this.props.item.day}
+            {meals.day}
           </Text>
         </View>
-        <Text style={[styles.title, { fontSize: 12, color: '#444', paddingHorizontal: 18 }]}>{this.props.item.description}</Text>
+        <Text style={[styles.title, { fontSize: 12, color: '#444', paddingHorizontal: 18 }]}>{meals.description}</Text>
+
       </Card>
     );
   }
@@ -41,7 +49,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     elevation: 2,
     padding: 2,
-    height: 200,
+    height: 230,
     bottom: 2,
     width: 250,
     margin: 2,

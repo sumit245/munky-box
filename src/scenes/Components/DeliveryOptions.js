@@ -47,7 +47,7 @@ export default class DeliveryOptions extends Component {
                                 </Pressable>
                                 <View>
                                     {
-                                        Object.keys(addresses).length !== 0 ? (<TouchableOpacity style={{ flexDirection: 'row', borderBottomColor: '#979797', borderBottomWidth: 1 }} onPress={() => { this.setAddress('Home') }} >
+                                        addresses && Object.keys(addresses).length !== 0 ? (<TouchableOpacity style={{ flexDirection: 'row', borderBottomColor: '#979797', borderBottomWidth: 1 }} onPress={() => { this.setAddress('Home') }} >
                                             <Icon name="ios-home-outline" size={16} style={styles.modalText} />
                                             <Text style={styles.modalText}>{addresses.address_type}</Text>
                                         </TouchableOpacity>

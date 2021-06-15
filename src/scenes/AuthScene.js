@@ -9,7 +9,6 @@ import {
 } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import { StatusBar } from 'react-native';
-
 import MobileLogin from './Components/mobilelogin/MobileLogin';
 import EmailLogin from './Components/emaillogin/EmailLogin';
 import FBLogin from './Components/facebooklogin/FBLogin';
@@ -33,8 +32,8 @@ class AuthScene extends Component {
         <View
           style={{ flex: 1, justifyContent: 'flex-end' }}>
           <Animated.View style={styles.skip}>
-            <TouchableOpacity onPress={() => Actions.replace('userdetails',{logintype:''})}>
-              <Text style={{ fontSize: 16}}>
+            <TouchableOpacity onPress={() => Actions.push('home', { logintype: '' })}>
+              <Text style={{ fontSize: 16 }}>
                 Skip{' '}
               </Text>
             </TouchableOpacity>

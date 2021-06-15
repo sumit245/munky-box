@@ -10,6 +10,10 @@ import PromoOptions from './PromoOptions';
 import BillingTable from './BillingTable';
 import TipOption from './TipOption';
 import DeliveryNotes from './DeliveryNotes';
+import { getUser } from '../../../services/user/getuser';
+import axios from 'axios';
+import { ORDER_URL } from '../../../services/EndPoints';
+import { ToastAndroid } from 'react-native';
 const { width, height } = Dimensions.get('window')
 
 export default class CheckOut extends Component {
@@ -18,28 +22,75 @@ export default class CheckOut extends Component {
     this.state = {
       ...this.props,
       selectedStartDate: null,
-      modalVisible: false
+      modalVisible: false,
+      discount: 0,
+      tip: 0
     };
   }
   dateHandler = (startDate, endDate) => {
-    console.log("Plan Starts from", startDate)
-    console.log("Plan ends at", endDate)
+    this.setState({ start_date: startDate, end_date: endDate })
   }
   couponHandler = (promo, discount) => {
-    console.log(promo, discount);
+    this.setState({
+      promo_code: promo,
+      discount: discount
+    })
   }
   noteHandler = (notes) => {
-    console.log("Notes", notes)
+    console.log(notes);
+    this.setState({ notes: notes })
   }
   tipHandler = (tip_amount) => {
-    console.log('Tip amount is', tip_amount)
+    this.setState({ tip: tip_amount })
   }
   slotHandler = (delivery_slot) => {
-    console.log(('TIming', delivery_slot));
+    this.setState({ time: delivery_slot })
+  }
+  cardHandler = (card) => {
+    this.setState({ cards: card })
+  }
+  addressHandler = (address) => {
+    this.setState({ address: address })
+  }
+  totalHandler = (total) => {
+    this.setState({ total: total })
+  }
+  orderNow = () => {
+    const { restaurant, total, user, plan, price, start_date, end_date, notes, time, tip, discount, address } = this.state;
+    let currenttime = new Date()
+    currenttime = currenttime.toLocaleDateString() + " " + currenttime.toLocaleTimeString()
+    console.log(currenttime);
+    const newOrder = {
+      order_time: currenttime,
+      status: "pending",
+      user,
+      address,
+      restaurant,
+      time,
+      plan,
+      price,
+      discount,
+      total,
+      tip,
+      start_date,
+      end_date,
+      notes,
+    }
+    axios.post(ORDER_URL, newOrder).then(res => {
+      ToastAndroid.show("Order Successfully Placed", 1000)
+    }).catch(err => {
+      alert(err)
+    })
+  }
+  componentDidMount() {
+    getUser('@user').then(res => (
+      res === null ? alert("Please login or register to proceed") : null,
+      this.setState({ user: res })
+    )).catch((err) => console.log(err))
   }
 
   render() {
-    const { plan, restaurant, price } = this.state
+    const { plan, restaurant, price, discount, tip } = this.state
     return (
       <View style={styles.container} >
         <CheckoutHeader />
@@ -50,17 +101,17 @@ export default class CheckOut extends Component {
               plan === "thirtyPlan" ? " 30 Days" : plan === "fifteenPlan" ? " 15 Days" : plan === "twoPlan" ? " 2 Days" : "..."
             }
           </Text>
-          <CheckoutAddress optionrow={styles.optionrow} options={styles.options} />
-          <CheckoutCards optionrow={styles.optionrow} options={styles.options} />
+          <CheckoutAddress optionrow={styles.optionrow} options={styles.options} addressHandler={this.addressHandler} />
+          <CheckoutCards optionrow={styles.optionrow} options={styles.options} cardHandler={this.cardHandler} />
           <PlanDuration optionrow={styles.optionrow} options={styles.options} plan={plan} dateHandler={this.dateHandler} />
           <DeliverySlots options={styles.options} slotHandler={this.slotHandler} />
           <PromoOptions options={styles.options} couponHandler={this.couponHandler} />
-          <BillingTable price={price} />
+          <BillingTable price={price} discount={discount} tip={tip} totalHandler={this.totalHandler} />
           <TipOption deliveryNotes={styles.deliveryNotes} options={styles.options} tipHandler={this.tipHandler} />
           <DeliveryNotes deliveryNotes={styles.deliveryNotes} options={styles.options} noteHandler={this.noteHandler} />
         </ScrollView>
         <View style={styles.buttonWrapper}>
-          <TouchableOpacity style={styles.checkout}>
+          <TouchableOpacity style={styles.checkout} onPress={this.orderNow} >
             <Icon name="opencart" size={28} color="#FFF" />
             <Text style={styles.btnText}>Complete your Order</Text>
           </TouchableOpacity>
@@ -106,7 +157,8 @@ const styles = StyleSheet.create({
   },
   options: {
     fontSize: 18,
-    color: "#777"
+    color: "#777",
+    textTransform: "capitalize"
   },
   buttonWrapper: {
     position: 'absolute',

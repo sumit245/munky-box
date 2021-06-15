@@ -1,18 +1,7 @@
 import axios from 'axios';
 import React, { Component } from 'react'
-import { Text, View, StyleSheet, TouchableOpacity, Dimensions, TextInput, Modal, ScrollView } from 'react-native'
-import Icon from 'react-native-vector-icons/Fontisto'
+import { Text, View, StyleSheet, Dimensions } from 'react-native'
 import { CHECKOUT_URL } from '../../../services/EndPoints'
-import { getAddress, setAddress } from '../../../services/addressHandler'
-import { getCard, setCard } from '../../../services/cardHandler'
-import { Checkbox } from 'react-native-paper';
-import CalendarPicker from 'react-native-calendar-picker';
-import CheckoutHeader from './CheckoutHeader';
-import CheckoutAddress from './CheckoutAddress';
-import CheckoutCards from './CheckoutCards';
-import PlanDuration from './PlanDuration';
-import DeliverySlots from './DeliverySlots';
-import PromoOptions from './PromoOptions';
 const { width, height } = Dimensions.get('window')
 
 export default class BillingTable extends Component {
@@ -20,21 +9,51 @@ export default class BillingTable extends Component {
         super(props);
         this.state = {
             ...this.props,
+            checks: true
+        }
+    }
+    shouldComponentUpdate(prevProps, nextProps) {
+        return true
+    }
+    componentDidUpdate(prevProps) {
+        if (prevProps.discount !== this.props.discount) {
+            const { total } = this.state
+            let newTotal = parseFloat(total) - parseFloat(this.props.discount)
+            newTotal = newTotal.toFixed(2)
+            this.setState({
+                discount: this.props.discount,
+                total: newTotal
+            });
+            this.props.totalHandler(newTotal)
+        }
+        if (prevProps.tip !== this.props.tip) {
+            const { total } = this.state
+            let newTotal = parseFloat(total) + parseFloat(this.props.tip)
+            newTotal = newTotal.toFixed(2)
+            this.setState({
+                tip: this.props.tip,
+                total: newTotal
+            });
+            this.props.totalHandler(newTotal)
         }
     }
 
     componentDidMount() {
         axios.get(CHECKOUT_URL).then(res => {
             let checks = res.data
-            let total = parseFloat(this.state.price) + parseFloat(checks.delivery_fee) + parseFloat(checks.service_fee) + parseFloat(checks.taxes)
+            let subtotal = parseFloat(this.state.price) +
+                parseFloat(checks.delivery_fee) +
+                parseFloat(checks.service_fee)
+            let total = subtotal + (subtotal * parseFloat(checks.taxes) / 100)
             total = total.toFixed(2)
             this.setState({ checks: checks, total: total })
+            this.props.totalHandler(total)
         }).catch(err => {
             console.error(err)
         })
     }
     render() {
-        const { plan, restaurant, price, checks, total, address, cards, modalVisible } = this.state
+        const { price, checks, total, discount, tip } = this.state
         return (
             <>
                 <View style={styles.billingTable}>
@@ -54,9 +73,25 @@ export default class BillingTable extends Component {
                                     <Text style={styles.rowContent}>${checks.service_fee}</Text>
                                 </View>
                                 <View style={styles.row}>
-                                    <Text style={styles.rowContent}>Taxes</Text>
-                                    <Text style={styles.rowContent}>${checks.taxes}</Text>
+                                    <Text style={styles.rowContent}>Taxes (%)</Text>
+                                    <Text style={styles.rowContent}>{checks.taxes}</Text>
                                 </View>
+                                {
+                                    discount ? (
+                                        <View style={styles.row}>
+                                            <Text style={styles.rowContent}>Discount ($)</Text>
+                                            <Text style={styles.rowContent}>{discount}</Text>
+                                        </View>
+                                    ) : null
+                                }
+                                {
+                                    tip ? (
+                                        <View style={styles.row}>
+                                            <Text style={styles.rowContent}>Tip Amount ($)</Text>
+                                            <Text style={styles.rowContent}>{tip}</Text>
+                                        </View>
+                                    ) : null
+                                }
                                 <View style={styles.row}>
                                     <Text style={styles.rowContent}>Total</Text>
                                     <Text style={styles.rowContent}>${total}</Text>
@@ -77,7 +112,7 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         borderTopWidth: 1,
         borderColor: "#ccc",
-        marginVertical: 6
+        marginVertical: 6,
     },
     row: {
         justifyContent: 'space-between',

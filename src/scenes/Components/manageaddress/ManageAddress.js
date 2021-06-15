@@ -42,7 +42,7 @@ export default class ManageAddress extends Component {
             phone: data.phone,
             email_id: data.email_id,
             address: address,
-            status: "active"
+            status: "Active"
         }
         console.log(user);
         axios.post(USER_URL, user).then(res => {
@@ -51,7 +51,7 @@ export default class ManageAddress extends Component {
             console.error(err)
         })
         setAddress('@address', JSON.stringify(address))
-        Actions.replace('home', { ...this.state })
+        Actions.push('home', { ...this.state })
     }
 
     render() {

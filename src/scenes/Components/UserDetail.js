@@ -14,7 +14,7 @@ import { Input } from "react-native-elements";
 import { Actions } from "react-native-router-flux";
 import Icon from "react-native-vector-icons/Ionicons";
 import * as ImagePicker from 'expo-image-picker';
-import { saveUser } from '../../services/saveuser'
+import { saveUser } from '../../services/user/saveuser'
 
 const { width, height } = Dimensions.get('window')
 const Lang = {
@@ -59,7 +59,7 @@ export default class RegistrationForm extends Component {
         this.state = {
             ...this.props,
             uri: 'https://cencup.com/wp-content/uploads/2019/07/avatar-placeholder.png',
-            title: 'Select an address '
+            title: 'Select an address ',
         }
     }
     _getTitle() {
@@ -97,7 +97,6 @@ export default class RegistrationForm extends Component {
         this.setState({ result: result })
         return result;
     }
-
     onChangeText = id => e => {
         this.setState({
             [id]: e
@@ -122,7 +121,7 @@ export default class RegistrationForm extends Component {
             }
             const user = JSON.stringify(user1)
             saveUser('@user', user)
-            Actions.replace('manageAddress', { ...this.state })
+            Actions.push('manageAddress', { ...this.state })
         }
         else {
             ToastAndroid.showWithGravityAndOffset(
@@ -134,6 +133,11 @@ export default class RegistrationForm extends Component {
             )
             Actions.push('home', { ...this.state })
             let data = this.state
+        }
+    }
+    componentDidMount() {
+        if (this.props.logintype === 'email') {
+            this.setState({ first_name: this.props.first_name })
         }
     }
     render() {
@@ -172,7 +176,7 @@ export default class RegistrationForm extends Component {
                                 errorMessage={this.state.nameError}
                                 displayError={this.state.nameErrorDisplay}
                                 onChangeText={this.onChangeText('first_name')}
-                                value={this.state.user}
+                                value={this.state.first_name}
                             />
 
                             <Input

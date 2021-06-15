@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, FlatList, Text, Image, ActivityIndicator, ScrollView, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, FlatList, Text, Image, ActivityIndicator, SafeAreaView, TouchableOpacity } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import BannerCarousel from './BannerCarousel';
 import ItemCard from './ItemCard';
@@ -9,7 +9,7 @@ import { CUISINE_URL, RESTAURANT_URL } from '../../services/EndPoints';
 import DeliveryOptions from './DeliveryOptions';
 import SortAndFilter from './SortAndFilter';
 
-const renderItem = ({ item, index }) => <ItemCard index={index} item={item} />;
+const renderItem = ({ item, index, }) => <ItemCard key={index} index={index} item={item} />;
 
 const onPress = () => {
   Actions.details({ title: 'Sponsored' });
@@ -29,25 +29,25 @@ class Lunch extends Component {
   render() {
     const { restaurant } = this.state
     return (
-      <ScrollView invertStickyHeaders>
-        <BannerCarousel />
-        <TouchableOpacity onPress={onPress}>
-        </TouchableOpacity>
+      <SafeAreaView style={{ flex: 1 }}>
+        {/* <BannerCarousel /> */}
+        {/* <TouchableOpacity onPress={onPress}>
+        </TouchableOpacity> */}
         <FlatList
           contentContainerStyle={{ marginLeft: 5 }}
           data={restaurant}
           renderItem={renderItem}
           keyExtractor={(item) => item.id}
         />
-      </ScrollView>
+      </SafeAreaView>
     )
   }
 
 }
 const Dinner = () => {
   return (
-    <ScrollView invertStickyHeaders>
-      <BannerCarousel />
+    <SafeAreaView style={{ flex: 1 }}>
+      {/* <BannerCarousel /> */}
       <TouchableOpacity onPress={onPress}>
       </TouchableOpacity>
       {/* <FlatList
@@ -56,7 +56,7 @@ const Dinner = () => {
         renderItem={renderItem}
         keyExtractor={(item) => item.id}
       /> */}
-    </ScrollView>
+    </SafeAreaView>
   )
 }
 const Cuisine = ({ image, title }) => (
@@ -111,17 +111,12 @@ export default class DetailStack extends Component {
       return (
         cuisine.length > 0 ? (
           <View style={{ flex: 1 }}>
-            <View
-              style={styles.header}
-            >
+            <View style={styles.header} >
               <DeliveryOptions />
               <SortAndFilter />
-
             </View>
 
-            <View style={{
-              height: 100,
-            }}>
+            <View style={{ height: 100 }}>
               <FlatList
                 contentContainerStyle={{ marginLeft: 10 }}
                 data={this.state.cuisine}
@@ -139,8 +134,6 @@ export default class DetailStack extends Component {
               onIndexChange={this._handleIndexChange}
               style={{ marginTop: -20 }}
             />
-
-
           </View>
         ) : (
           <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }} >

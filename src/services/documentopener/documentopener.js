@@ -7,7 +7,6 @@ export const ModalOpener = ({ modalVisible }) => {
     return (
         <View>
             <Text>Hello</Text>
-
         </View>
 
     );

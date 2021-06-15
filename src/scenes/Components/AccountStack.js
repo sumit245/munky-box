@@ -1,14 +1,9 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, Image, Button, ActionSheetIOS } from 'react-native';
-import 'react-native-gesture-handler';
-import {
-  TouchableHighlight,
-  TouchableOpacity,
-} from 'react-native-gesture-handler';
-import Animated from 'react-native-reanimated';
+import { View, Text, StyleSheet, Image, TouchableHighlight, TouchableOpacity, Animated } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import Icons from 'react-native-vector-icons/Ionicons';
-import { getUser } from '../../services/getuser';
+import { clearAll, getUser, removeUser } from '../../services/user/getuser';
+
 export default class AccountStack extends Component {
   constructor(props) {
     super(props);
@@ -22,6 +17,15 @@ export default class AccountStack extends Component {
     getUser('@user').then(res => (
       this.setState({ user: res })
     )).catch((err) => console.log(err))
+  }
+  logout = () => {
+    removeUser('@user').then(res => {
+      clearAll().then(
+        alert('Logged out')
+      )
+    }).catch((err) => {
+      alert(err)
+    })
   }
 
   render() {
@@ -47,7 +51,7 @@ export default class AccountStack extends Component {
               <Text style={{ fontSize: 14, color: '#777' }}>
                 {data.email_id || "Add new email"}
               </Text>
-              <TouchableOpacity onPress={() => Actions.replace('userdetails', { type: 'edit' })} >
+              <TouchableOpacity onPress={() => Actions.push('userdetails', { type: 'edit' })} >
                 <Text
                   style={{ marginLeft: 5, color: "#246eff", }}>
                   Edit Details
@@ -57,22 +61,18 @@ export default class AccountStack extends Component {
           </View>
           <View>
           </View>
-
         </View>
-
         <View style={styles.drawerRow}>
           <Icons name="ios-cash-outline" color={"#55aeff"} size={24} brand />
-          <TouchableOpacity onPress={() => { Actions.coupons() }}>
+          <TouchableOpacity onPress={() => { Actions.push('coupons') }}>
             <Text style={styles.drawerText}>Add Coupons</Text>
           </TouchableOpacity>
-
         </View>
         <View style={styles.drawerRow}>
           <Icons name="earth" color={"#55aeff"} size={24} brand />
           <TouchableOpacity onPress={() => { Actions.push('changeaddress') }}>
             <Text style={styles.drawerText}>Manage Address</Text>
           </TouchableOpacity>
-
         </View>
         <View style={styles.drawerRow}>
           <Icons name="ios-receipt-outline" color={"#55aeff"} size={24} brand />
@@ -84,17 +84,13 @@ export default class AccountStack extends Component {
             onPress={() => { Actions.push('cards', { title: 'Payment Methods', checkout: false }) }}
           >
             <Text style={styles.drawerText}>Payment Methods</Text>
-
           </TouchableOpacity>
-
         </View>
-
         <View style={styles.drawerRow}>
           <Icons name="timer-outline" color={"#55aeff"} size={24} brand />
-          <TouchableOpacity onPress={() => { Actions.orderhistory() }}>
+          <TouchableOpacity onPress={() => { Actions.push('orderhistory') }}>
             <Text style={styles.drawerText}>History</Text>
           </TouchableOpacity>
-
         </View>
         <View style={styles.drawerRow}>
           <Icons name="cog-outline" color={"#55aeff"} size={24} brand />
@@ -102,15 +98,14 @@ export default class AccountStack extends Component {
         </View>
         <View style={styles.drawerRow}>
           <Icons name="md-document-text-outline" color={"#55aeff"} size={24} brand />
-          <TouchableOpacity onPress={() => { Actions.policies() }}>
+          <TouchableOpacity onPress={() => { Actions.push('policies') }}>
             <Text style={styles.drawerText}>Policies</Text>
           </TouchableOpacity>
-
         </View>
-        <View style={[styles.drawerRow, { position: 'absolute', bottom: 0 }]}>
+        <TouchableOpacity onPress={this.logout} style={[styles.drawerRow, { position: 'absolute', bottom: 0 }]}>
           <Icons name="exit-outline" color={"#55aeff"} size={24} brand />
           <Text style={styles.drawerText}>Logout</Text>
-        </View>
+        </TouchableOpacity>
       </Animated.View>
     );
   }

@@ -15,4 +15,12 @@ export const getAddress = async (key) => {
         console.log(e)
     }
 }
+export const removeAddress = async (key) => {
+    try {
+        await AsyncStorage.removeItem(key)
+    } catch (e) {
+        // remove error
+    }
+    console.log('Done.')
+}
 

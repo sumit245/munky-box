@@ -1,8 +1,7 @@
-import AsyncStorage from '@react-native-community/async-storage';
 import React, { Component } from 'react';
-import { View, StyleSheet, Image, TouchableOpacity, Alert } from 'react-native';
+import { View, StyleSheet, Image, TouchableOpacity, } from 'react-native';
 import { Card, Text } from 'react-native-elements';
-import { Avatar, IconButton } from 'react-native-paper';
+import { Avatar, } from 'react-native-paper';
 import { Actions } from 'react-native-router-flux';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { Favourite } from '../Components/favourite/favourite'
@@ -24,22 +23,22 @@ export default class ItemCard extends Component {
   };
   detailpage = () => {
     const title = this.state.restaurant_name
-    Actions.push('details', { title: title, ...this.state, })
+    Actions.push('details', { title: title, ...this.state })
   };
   render() {
     return (
-      <Card containerStyle={styles.item} key={this.props.index}>
+      <Card containerStyle={styles.item} key={this.state._id} >
         <Image
-          source={{ uri: this.state.documents[0].image }}
+          source={{ uri: this.state.documents[1].image }}
           style={styles.image}
           resizeMode="cover"
         />
-        <Favourite style={styles.bookmark} isHome={this.state.isHome} />
+        <Favourite style={styles.bookmark} isHome={this.state.isHome} restaurant={this.state} />
         <View style={styles.footer}>
           <TouchableOpacity style={{ flexDirection: 'row' }} onPress={this.detailpage}>
             <Avatar.Image
               size={40}
-              source={{ uri: this.state.documents[1].image }}
+              source={{ uri: this.state.documents[0].image }}
               style={{ marginLeft: 5 }}
             />
             <View>
@@ -52,14 +51,15 @@ export default class ItemCard extends Component {
                   numberOfLines={1}>
                   {this.props.item.restaurant_name}
                 </Text>
-                <Icon style={{ marginTop: 5 }} name="stop-circle" color={this.props.item.cuisine_type === 'veg' ? '#2aaf21' : '#cc2224'} size={16} />
+                <Icon style={{ marginTop: 5 }} name="stop-circle" color={this.props.item.type === 'Veg' ? '#2aaf21' : '#cc2224'} size={16} />
               </View>
               <Text
                 style={[
                   styles.tags,
-                  { fontSize: 14, marginTop: -6, color: '#555' },
+                  { fontSize: 14, marginTop: -6, color: '#555', maxWidth: '90%' },
                 ]}
-                numberOfLines={1}>
+                ellipsizeMode="tail"
+                numberOfLines={2}>
                 {this.props.item.about}
               </Text>
             </View>

@@ -4,7 +4,7 @@ import {
     StyleSheet,
     Dimensions,
     Animated,
-    TouchableOpacity,Alert
+    TouchableOpacity, Alert
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Fontisto';
 import * as Facebook from 'expo-facebook';
@@ -12,32 +12,29 @@ import { Actions } from 'react-native-router-flux';
 
 const { width, height } = Dimensions.get('window');
 export default class FBLogin extends Component {
-    logIn=async ()=> {
-    try {
-        await Facebook.initializeAsync({
-            appId: '152464760030696',
-        });
-        const {
-            type,
-            token,
-            expirationDate,
-            permissions,
-            declinedPermissions,
-        } = await Facebook.logInWithReadPermissionsAsync({
-            permissions: ['public_profile','email'],
-        });
-        if (type === 'success') {
-            // Get the user's name using Facebook's Graph API
-            const response = await fetch(`https://graph.facebook.com/me?access_token=${token}`);
-            const username=await response.json().name
-            Actions.replace('userdetails',{logintype:'email',user:username})
-        } else {
-            // type === 'cancel'
+    logIn = async () => {
+        try {
+            await Facebook.initializeAsync({
+                appId: '152464760030696',
+            });
+            const {
+                type,
+                token,
+                expirationDate,
+                permissions,
+                declinedPermissions,
+            } = await Facebook.logInWithReadPermissionsAsync({
+                permissions: ['public_profile', 'email'],
+            });
+            if (type === 'success') {
+                const response = await fetch(`https://graph.facebook.com/me?access_token=${token}`);
+                const first_name = (await response.json()).name
+                Actions.push('userdetails', { logintype: 'email', first_name: first_name })
+            }
+        } catch ({ message }) {
+            alert(`Facebook Login Error: ${message}`);
         }
-    } catch ({ message }) {
-        alert(`Facebook Login Error: ${message}`);
     }
-}
     render() {
         return (
             <>
@@ -55,7 +52,7 @@ export default class FBLogin extends Component {
                     </Animated.View>
                 </TouchableOpacity>
 
-                
+
             </>
         )
     }

@@ -17,4 +17,40 @@ export const setCard = async (key, value) => {
     }
 };
 
+export const setMultipleCards = async (card) => {
+    try {
+        await AsyncStorage.multiSet([card])
+    } catch (e) {
+        //save error
+    }
+}
+export const getMultipleCards = async (cards) => {
+    let values
+    try {
+        values = await AsyncStorage.multiGet(cards)
+        return values
+    } catch (e) {
+        // read error
+    }
+}
+export const getAllKeys = async () => {
+    let keys = []
+    try {
+        keys = await AsyncStorage.getAllKeys()
+        return keys
+    } catch (e) {
+        // read key error
+    }
+}
+export const removeCard = async (card) => {
+    try {
+        await AsyncStorage.removeItem(card)
+    } catch (e) {
+        // remove error
+    }
+    console.log('Done.')
+}
+
+
+
 

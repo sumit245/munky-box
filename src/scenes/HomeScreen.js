@@ -17,7 +17,7 @@ function MyTabs() {
       inactiveColor='#4b778d'
       inactiveTintColor='black'
       labeled={false}
-      barStyle={{ backgroundColor: 'white', justifyContent: 'flex-start', }}
+      barStyle={{ backgroundColor: 'white', justifyContent: 'flex-start' }}
     >
       <Tab.Screen
         name="Feed"

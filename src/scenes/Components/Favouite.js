@@ -12,6 +12,10 @@ export default class Favouite extends Component {
         }
     }
     componentDidMount() {
+        this.didFocusListener = this.props.navigation.addListener(
+            'didFocus',
+            () => { console.log('did focus') },
+        );
         getFavourite('@favourite').then(res => {
             if (res) {
                 let chef = []
@@ -26,6 +30,9 @@ export default class Favouite extends Component {
             console.error(err)
         })
 
+    }
+    componentWillUnmount() {
+        this.didFocusListener.remove();
     }
     render() {
         const { restaurant } = this.state

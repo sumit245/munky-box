@@ -29,7 +29,7 @@ export default class SortAndFilter extends Component {
         const { sortVisible, isEnabled, filter, meal_type, value } = this.state;
         return (
             <>
-                <View style={styles.container}>
+                <View>
                     <Modal
                         animationType="slide"
                         transparent={true}
@@ -152,15 +152,11 @@ export default class SortAndFilter extends Component {
                         <Icon name="ios-options-outline" size={30} />
                     </TouchableOpacity>
                 </View>
-
             </>
         )
     }
 }
 const styles = StyleSheet.create({
-    container: {
-        backgroundColor: 'rgba(30,30,30,0.5)'
-    },
     modalHeader: {
         justifyContent: 'space-between',
         flexDirection: 'row',

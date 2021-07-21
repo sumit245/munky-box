@@ -1,13 +1,12 @@
 import React, { Component } from 'react';
 import { View, StyleSheet, FlatList, Text, Image, ActivityIndicator, SafeAreaView, TouchableOpacity } from 'react-native';
 import { Actions } from 'react-native-router-flux';
-import BannerCarousel from './BannerCarousel';
 import ItemCard from './ItemCard';
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view'
 import axios from 'axios';
 import { CUISINE_URL, RESTAURANT_URL } from '../../services/EndPoints';
-import DeliveryOptions from './DeliveryOptions';
-import SortAndFilter from './SortAndFilter';
+import DeliveryOptions from './home/DeliveryOptions';
+import SortAndFilter from './home/SortAndFilter';
 
 const renderItem = ({ item, index, }) => <ItemCard key={index} index={index} item={item} />;
 
@@ -30,11 +29,11 @@ class Lunch extends Component {
     const { restaurant } = this.state
     return (
       <SafeAreaView style={{ flex: 1 }}>
-        {/* <BannerCarousel /> */}
-        {/* <TouchableOpacity onPress={onPress}>
+        {/* <BannerCarousel />   
+        <TouchableOpacity onPress={onPress}>
         </TouchableOpacity> */}
         <FlatList
-          contentContainerStyle={{ marginLeft: 5 }}
+          contentContainerStyle={{ marginLeft: 5, paddingBottom: 4 }}
           data={restaurant}
           renderItem={renderItem}
           keyExtractor={(item) => item.id}
@@ -100,6 +99,20 @@ export default class DetailStack extends Component {
       console.error(err);
     })
   }
+  selectCuisine = (cuisine) => {
+    axios.get(RESTAURANT_URL).then((res) => {
+      let restaurants = res.data
+      let filteredRestaurant = []
+      for (let i = 0; i < restaurants.length; i++) {
+        if (restaurants[i].cuisine_type === cuisine) {
+          filteredRestaurant.push(restaurants[i])
+        }
+      }
+      this.setState({ restaurant: filteredRestaurant })
+    }).catch((err) => {
+      console.error(err);
+    })
+  }
 
   renderCuisine = ({ item }) => (
     <Cuisine image={item.image} title={item.cuisineName} />
@@ -110,7 +123,7 @@ export default class DetailStack extends Component {
     {
       return (
         cuisine.length > 0 ? (
-          <View style={{ flex: 1 }}>
+          <SafeAreaView style={{ flex: 1 }}>
             <View style={styles.header} >
               <DeliveryOptions />
               <SortAndFilter />
@@ -119,8 +132,21 @@ export default class DetailStack extends Component {
             <View style={{ height: 100 }}>
               <FlatList
                 contentContainerStyle={{ marginLeft: 10 }}
-                data={this.state.cuisine}
-                renderItem={this.renderCuisine}
+                data={[...this.state.cuisine, { last: true }]}
+                renderItem={({ item }) => {
+                  if (item.last) {
+                    return (
+                      <View style={{ width: 40, height: 40, borderRadius: 20, backgroundColor: "#FFF", justifyContent: "center", alignItems: "center", left: -20 }}>
+                        <Text style={{ color: "#777" }} >All</Text>
+                      </View>
+                    );
+                  }
+                  return (
+                    <TouchableOpacity onPress={() => this.selectCuisine(item.cuisineName)}>
+                      <Cuisine image={item.image} title={item.cuisineName} />
+                    </TouchableOpacity>
+                  );
+                }}
                 keyExtractor={(item) => item.id}
                 horizontal={true}
                 showsHorizontalScrollIndicator={false}
@@ -134,7 +160,7 @@ export default class DetailStack extends Component {
               onIndexChange={this._handleIndexChange}
               style={{ marginTop: -20 }}
             />
-          </View>
+          </SafeAreaView>
         ) : (
           <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }} >
             <ActivityIndicator size="large" color="#0707" animating />
@@ -157,9 +183,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     height: 32,
-    paddingTop: 2,
-    marginBottom: 14,
-    paddingHorizontal: 2,
   },
   containerStyle: { backgroundColor: 'white', padding: 20 },
   cuisine: {

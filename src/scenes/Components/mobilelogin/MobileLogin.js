@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import {
     View,
     Text,
-    StyleSheet,
     Dimensions,
     Animated,
     TouchableOpacity
@@ -13,6 +12,7 @@ import { FirebaseRecaptchaVerifierModal, FirebaseRecaptchaBanner } from 'expo-fi
 import OTPTextView from 'react-native-otp-textinput'
 import { Actions } from 'react-native-router-flux';
 import CountDown from 'react-native-countdown-component';
+import styles from "../../styles/AuthStyle"
 
 const { width } = Dimensions.get('window');
 const recaptchaVerifier = React.createRef();
@@ -38,7 +38,7 @@ class OTPLogin extends React.PureComponent {
                 verificationCode
             );
             await firebase.auth().signInWithCredential(credential);
-            Actions.replace('userdetails', { logintype: 'mobile', phone: phoneNumber })
+            Actions.push('userdetails', { logintype: 'mobile', phone: phoneNumber })
         } catch (err) {
             alert(`Error: ${err.message}`);
         }
@@ -74,7 +74,7 @@ class OTPLogin extends React.PureComponent {
                             onFinish={() => {
                                 alert('Try again after some time!!!')
                             }}
-                            timeToShow={['M', 'S']}
+                            timeToShow={['S']}
                         />
                     </View>
                     <Text style={{ color: '#194350', marginLeft: -4, fontSize: 12, marginTop: 3 }} >S</Text>
@@ -125,7 +125,11 @@ export default class MobileLogin extends Component {
                             <PhoneInput
                                 placeholder="Enter Mobile Number"
                                 defaultCode="CA"
-                                containerStyle={{ width: width - 40, borderRadius: 8, borderColor: 'black', borderWidth: 1, backgroundColor: '#fff' }}
+                                textInputProps={
+                                    returnKeyType = "done"
+                                }
+                                containerStyle={styles.btnOTP}
+                                textContainerStyle={styles.btnOTP, { borderColor: "#fff", height: 40 }}
                                 onChangeFormattedText={phoneNumber => this.setState({ phoneNumber: phoneNumber })}
                             />
                             <TouchableOpacity onPress={this._sendVerificationCode} disabled={!phoneNumber} >
@@ -133,7 +137,7 @@ export default class MobileLogin extends Component {
                                     style={styles.btnOTP}>
                                     <Text style={{ fontSize: 20, fontWeight: 'bold' }}>
                                         Send OTP
-              </Text>
+                                    </Text>
                                 </Animated.View>
                             </TouchableOpacity>
                         </View>
@@ -144,46 +148,3 @@ export default class MobileLogin extends Component {
         );
     }
 }
-
-const styles = StyleSheet.create({
-    btnOTP: {
-        height: 50,
-        width: width - 40,
-        borderColor: 'black',
-        borderWidth: 1,
-        backgroundColor: '#fff',
-        borderRadius: 8,
-        alignItems: 'center',
-        justifyContent: 'center',
-        marginVertical: 5,
-    },
-    mobin: {
-        justifyContent: 'center',
-        alignItems: 'center',
-        top: -80
-    },
-    instructions: {
-        fontSize: 14,
-        fontWeight: '500',
-        textAlign: 'center',
-        color: '#333333',
-        marginBottom: 10
-    },
-    textInputContainer: {
-        alignItems: 'center',
-        justifyContent: 'center',
-        marginBottom: 10
-    },
-    roundedTextInput: {
-        height: 40,
-        width: 40,
-        borderRadius: 20,
-        backgroundColor: '#fff',
-        borderWidth: 1,
-    },
-    buttonWrapper: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        marginHorizontal: 20
-    },
-});

@@ -7,43 +7,24 @@ import {
     TouchableOpacity
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Fontisto';
-
+import styles from "../../styles/AuthStyle"
 
 const { width, height } = Dimensions.get('window');
 
 export default class EmailLogin extends Component {
     render() {
         return (
-            <>
-                <TouchableOpacity style={{ top: -40 }}>
-                    <Animated.View style={styles.buttonEmail}>
-                        <Icon
-                            name="email"
-                            color="#4267B2"
-                            size={26}
-                        />
-                        <Text style={{ fontSize: 20, fontWeight: 'bold' }}>
-                            Continue with Email
-              </Text>
-                    </Animated.View>
-                </TouchableOpacity>
+            <TouchableOpacity style={[styles.btnOTP, { marginLeft: 16, top: -40 }]}>
+                <Icon
+                    name="email"
+                    color="#4267B2"
+                    size={26}
+                />
+                <Text style={{ fontSize: 20, fontWeight: 'bold' }}>
+                    Continue with Email
+                </Text>
+            </TouchableOpacity>
 
-                
-            </>
         )
     }
 }
-const styles = StyleSheet.create({
-    buttonEmail: {
-        backgroundColor: 'white',
-        borderColor: 'black',
-        borderWidth: 1,
-        height: 50,
-        flexDirection: 'row',
-        marginHorizontal: 20,
-        borderRadius: 8,
-        alignItems: 'center',
-        justifyContent: 'space-evenly',
-        marginVertical: 5,
-    },
-});

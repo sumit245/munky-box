@@ -6,6 +6,7 @@ import {
   Dimensions,
   Animated,
   TouchableOpacity,
+  SafeAreaView
 } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import { StatusBar } from 'react-native';
@@ -14,6 +15,8 @@ import EmailLogin from './Components/emaillogin/EmailLogin';
 import FBLogin from './Components/facebooklogin/FBLogin';
 import GoogLogin from './Components/googlelogin/GoogLogin';
 import Logo from './Components/Logo';
+import { ImageBackground } from 'react-native';
+import styles from "./styles/AuthStyle"
 
 const { width, height } = Dimensions.get('window');
 class AuthScene extends Component {
@@ -27,72 +30,40 @@ class AuthScene extends Component {
   }
   render() {
     return (
-      <>
+      <ImageBackground
+        source={require('../../assets/spashbg.jpg')}
+        style={{ width: "100%", height: "100%", flex: 1 }}
+      >
         <StatusBar />
-        <View
+        <SafeAreaView
           style={{ flex: 1, justifyContent: 'flex-end' }}>
-          <Animated.View style={styles.skip}>
-            <TouchableOpacity onPress={() => Actions.push('home', { logintype: '' })}>
-              <Text style={{ fontSize: 16 }}>
-                Skip{' '}
-              </Text>
-            </TouchableOpacity>
-          </Animated.View>
+          <TouchableOpacity style={styles.skip} onPress={() => Actions.push('home', { logintype: '' })}>
+            <Text style={{ fontSize: 16, fontWeight: "bold" }}>
+              Skip{' '}
+            </Text>
+          </TouchableOpacity>
           <Logo />
           <MobileLogin />
           <View
-            style={{
-              borderBottomColor: '#777',
-              borderBottomWidth: 1,
-              top: -60,
-              width: width - 40,
-              justifyContent: 'center',
-              alignSelf: 'center'
-
-            }}>
+            style={styles.orLine}>
             <Text
-              style={{
-                fontSize: 20,
-                fontWeight: 'bold',
-                color: '#777',
-                textAlign: 'center',
-              }}>
+              style={styles.orText}>
               OR
             </Text>
           </View>
           <EmailLogin />
-
           <View style={styles.social}>
             <FBLogin />
             <GoogLogin />
           </View>
           <Text
-            style={{
-              textAlign: 'center',
-              marginBottom: 5,
-              justifyContent: 'flex-end',
-            }}>
-            By Continuing,you agree to our terms and conditions{' '}
+            style={styles.termsCondition}>
+            By Continuing,you agree to our terms and conditions
           </Text>
-        </View>
-      </>
+        </SafeAreaView>
+      </ImageBackground>
     );
   }
 }
-
-const styles = StyleSheet.create({
-  social: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    marginHorizontal: 20,
-    padding: 5,
-    top: -40
-  },
-  skip: {
-    position: 'absolute',
-    top: 10,
-    right: 5,
-  },
-});
 
 export default AuthScene;

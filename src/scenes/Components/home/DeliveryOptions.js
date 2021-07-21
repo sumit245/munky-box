@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { View, TouchableOpacity, Modal, StyleSheet, Text, Pressable } from 'react-native'
 import Icon from 'react-native-vector-icons/Ionicons';
-import { getAddress } from '../../services/addressHandler'
+import { getAddress } from '../../../services/addressHandler'
 
 export default class DeliveryOptions extends Component {
     state = {
@@ -26,6 +26,7 @@ export default class DeliveryOptions extends Component {
 
     render() {
         const { modalVisible, addresses } = this.state;
+        console.log(modalVisible);
         return (
             <>
                 <View style={styles.sortView}>
@@ -39,12 +40,12 @@ export default class DeliveryOptions extends Component {
                     >
                         <View style={styles.sortView}>
                             <View style={styles.modalView}>
-                                <Pressable
+                                <TouchableOpacity
                                     style={styles.buttonClose}
                                     onPress={() => this.setModalVisible(!modalVisible)}
                                 >
                                     <Icon name="close-outline" size={20} />
-                                </Pressable>
+                                </TouchableOpacity>
                                 <View>
                                     {
                                         addresses && Object.keys(addresses).length !== 0 ? (<TouchableOpacity style={{ flexDirection: 'row', borderBottomColor: '#979797', borderBottomWidth: 1 }} onPress={() => { this.setAddress('Home') }} >
@@ -90,7 +91,7 @@ const styles = StyleSheet.create({
         position: 'absolute',
         top: 20,
         width: 220,
-        left: 2,
+        left: 4,
         backgroundColor: "white",
         shadowColor: "#000",
         shadowOffset: {

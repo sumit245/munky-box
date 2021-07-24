@@ -58,12 +58,7 @@ const Dinner = () => {
     </SafeAreaView>
   )
 }
-const Cuisine = ({ image, title }) => (
-  <View style={styles.cuisine}>
-    <Image source={{ uri: image }} style={{ width: 40, height: 40, borderRadius: 20 }} />
-    <Text style={styles.cuisine_name}>{title}</Text>
-  </View>
-);
+
 export default class DetailStack extends Component {
   state = {
     index: 0,
